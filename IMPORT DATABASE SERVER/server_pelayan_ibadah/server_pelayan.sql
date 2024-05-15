@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Bulan Mei 2024 pada 09.54
+-- Waktu pembuatan: 15 Bulan Mei 2024 pada 16.55
 -- Versi server: 10.4.24-MariaDB
 -- Versi PHP: 8.1.6
 
@@ -121,7 +121,8 @@ INSERT INTO `jadwal_ibadah` (`id_jadwal_ibadah`, `id_jenis_minggu`, `tgl_ibadah`
 (5, 7, '2024-04-20 20:12:31', 'Sesi 3', 'Ibadah Sesi 3 HKBP Palmarum', '2024-04-19 20:13:29', '2024-05-14 15:08:34', '2024-04-19 20:13:29'),
 (6, 11, '2024-04-29 20:08:06', 'Sesi 1', 'Sesi 1 Kebaktian Pagi HKBP Palmarum', '2024-04-29 20:08:37', '2024-05-14 15:07:50', '2024-04-29 20:08:37'),
 (7, 16, '2024-05-14 17:00:00', 'Sesi 1', 'Ibadah Pagi Palmarum', '2024-05-15 03:01:53', '2024-05-15 03:02:00', '2024-05-15 03:01:53'),
-(8, 8, '2024-05-14 17:00:00', 'Sesi 2', 'Ibadah Minggu Sesi 2 HKBP Palmarum', '2024-05-15 07:11:38', '2024-05-15 07:11:38', '2024-05-15 07:11:38');
+(8, 8, '2024-05-14 17:00:00', 'Sesi 2', 'Ibadah Minggu Sesi 2 HKBP Palmarum', '2024-05-15 07:11:38', '2024-05-15 07:11:38', '2024-05-15 07:11:38'),
+(9, 7, '2024-05-14 17:00:00', 'Sesi 2', 'Ibadah Sesi 2', '2024-05-15 14:53:52', '2024-05-15 14:53:52', '2024-05-15 14:53:52');
 
 -- --------------------------------------------------------
 
@@ -243,7 +244,9 @@ INSERT INTO `pelayan_ibadah` (`id_jadwal_ibadah`, `id_pelayanan_ibadah`, `ketera
 (2, 8, 'Pemain Saxophone Sesi Ibadah 2', '2024-05-14 12:48:43', '2024-05-14 12:48:43', '2024-05-14 12:48:43'),
 (6, 18, 'Pemain Drum Sesi 1 Ibadah', '2024-05-14 15:12:31', '2024-05-14 15:12:31', '2024-05-14 15:12:31'),
 (7, 19, 'Pemain Kecapi Ibadah Sesi 1 Pagi', '2024-05-15 03:03:40', '2024-05-15 03:03:40', '2024-05-15 03:03:40'),
-(8, 3, 'Pemain Piano ', '2024-05-15 07:12:18', '2024-05-15 07:12:18', '2024-05-15 07:12:18');
+(8, 3, 'Pemain Piano ', '2024-05-15 07:12:18', '2024-05-15 07:12:18', '2024-05-15 07:12:18'),
+(8, 9, 'Pemain Gitar', '2024-05-15 14:50:28', '2024-05-15 14:50:28', '2024-05-15 14:50:28'),
+(9, 11, 'Pemain Musik Ibadah Palmarum', '2024-05-15 14:54:33', '2024-05-15 14:54:33', '2024-05-15 14:54:33');
 
 --
 -- Indexes for dumped tables
@@ -269,6 +272,12 @@ ALTER TABLE `pelayanan_ibadah`
   ADD PRIMARY KEY (`id_pelayanan_ibadah`);
 
 --
+-- Indeks untuk tabel `pelayan_ibadah`
+--
+ALTER TABLE `pelayan_ibadah`
+  ADD KEY `id_pelayanan_ibadah` (`id_pelayanan_ibadah`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -276,7 +285,7 @@ ALTER TABLE `pelayanan_ibadah`
 -- AUTO_INCREMENT untuk tabel `jadwal_ibadah`
 --
 ALTER TABLE `jadwal_ibadah`
-  MODIFY `id_jadwal_ibadah` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_jadwal_ibadah` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `jenis_minggu`
@@ -299,6 +308,12 @@ ALTER TABLE `pelayanan_ibadah`
 --
 ALTER TABLE `jadwal_ibadah`
   ADD CONSTRAINT `jadwal_ibadah_ibfk_1` FOREIGN KEY (`id_jenis_minggu`) REFERENCES `jenis_minggu` (`id_jenis_minggu`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `pelayan_ibadah`
+--
+ALTER TABLE `pelayan_ibadah`
+  ADD CONSTRAINT `pelayan_ibadah_ibfk_1` FOREIGN KEY (`id_pelayanan_ibadah`) REFERENCES `pelayanan_ibadah` (`id_pelayanan_ibadah`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
