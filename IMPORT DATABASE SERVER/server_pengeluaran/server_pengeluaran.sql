@@ -65,24 +65,45 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getById_pengeluaran` (IN `p_id_peng
         p.id_pengeluaran = p_id_pengeluaran;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `tambah_pengeluaran` (IN `p_jumlah_pengeluaran` INT, IN `p_tanggal_pengeluaran` VARCHAR(225), IN `p_keterangan_pengeluaran` VARCHAR(225), IN `p_id_kategori_pengeluaran` INT, IN `p_id_bank` INT, IN `p_bukti_pengeluaran` VARCHAR(500))   BEGIN
-    INSERT INTO pengeluaran (
-        jumlah_pengeluaran,
-        tanggal_pengeluaran,
-        keterangan_pengeluaran,
-        id_kategori_pengeluaran,
-        id_bank,
-        bukti_pengeluaran
-    ) VALUES (
-        p_jumlah_pengeluaran,
-        p_tanggal_pengeluaran,
-        p_keterangan_pengeluaran,
-        p_id_kategori_pengeluaran,
-        p_id_bank,
-        p_bukti_pengeluaran
-    );
-END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `tambah_pengeluaran` (
+    IN `p_jumlah_pengeluaran` INT, 
+    IN `p_tanggal_pengeluaran` VARCHAR(225), 
+    IN `p_keterangan_pengeluaran` VARCHAR(225), 
+    IN `p_id_kategori_pengeluaran` INT, 
+    IN `p_id_bank` INT, 
+    IN `p_bukti_pengeluaran` VARCHAR(500)
+)
+BEGIN
+    -- Check if the record already exists
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM `pengeluaran` 
+        WHERE `jumlah_pengeluaran` = p_jumlah_pengeluaran 
+          AND `tanggal_pengeluaran` = p_tanggal_pengeluaran 
+          AND `keterangan_pengeluaran` = p_keterangan_pengeluaran 
+          AND `id_kategori_pengeluaran` = p_id_kategori_pengeluaran 
+          AND `id_bank` = p_id_bank 
+          AND `bukti_pengeluaran` = p_bukti_pengeluaran
+    ) THEN
+        -- Insert the new record if it does not exist
+        INSERT INTO `pengeluaran` (
+            `jumlah_pengeluaran`,
+            `tanggal_pengeluaran`,
+            `keterangan_pengeluaran`,
+            `id_kategori_pengeluaran`,
+            `id_bank`,
+            `bukti_pengeluaran`
+        ) VALUES (
+            p_jumlah_pengeluaran,
+            p_tanggal_pengeluaran,
+            p_keterangan_pengeluaran,
+            p_id_kategori_pengeluaran,
+            p_id_bank,
+            p_bukti_pengeluaran
+        );
+    END IF;
+END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ubah_pengeluaran` (IN `p_IDpengeluaran` INT, IN `p_bukti_pengeluaran` VARCHAR(500), IN `p_jumlah_pengeluaran` INT, IN `p_tanggal_pengeluaran` VARCHAR(255), IN `p_keterangan_pengeluaran` VARCHAR(255), IN `p_id_kategori_pengeluaran` INT, IN `p_id_bank` INT)   BEGIN
     UPDATE pengeluaran
     SET

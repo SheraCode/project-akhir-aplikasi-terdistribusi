@@ -64,25 +64,44 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getByIdPemasukan` (IN `p_id_pemasuk
     WHERE
         p.id_pemasukan = p_id_pemasukan;
 END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_pemasukan` (IN `p_tanggal_pemasukan` DATE, IN `p_total_pemasukan` INT, IN `p_bentuk_pemasukan` VARCHAR(225), IN `p_id_kategori_pemasukan` INT, IN `p_bukti_pemasukan` VARCHAR(500), IN `p_id_bank` INT)   BEGIN
-    INSERT INTO `pemasukan` (
-        `tanggal_pemasukan`,
-        `total_pemasukan`,
-        `bentuk_pemasukan`,
-        `id_kategori_pemasukan`,
-        `bukti_pemasukan`,
-        `id_bank`
-    ) VALUES (
-        p_tanggal_pemasukan,
-        p_total_pemasukan,
-        p_bentuk_pemasukan,
-        p_id_kategori_pemasukan,
-        p_bukti_pemasukan,
-        p_id_bank
-    );
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_pemasukan` (
+    IN `p_tanggal_pemasukan` DATE, 
+    IN `p_total_pemasukan` INT, 
+    IN `p_bentuk_pemasukan` VARCHAR(225), 
+    IN `p_id_kategori_pemasukan` INT, 
+    IN `p_bukti_pemasukan` VARCHAR(500), 
+    IN `p_id_bank` INT
+)
+BEGIN
+    -- Check if the record already exists
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM `pemasukan` 
+        WHERE `tanggal_pemasukan` = p_tanggal_pemasukan 
+          AND `total_pemasukan` = p_total_pemasukan 
+          AND `bentuk_pemasukan` = p_bentuk_pemasukan 
+          AND `id_kategori_pemasukan` = p_id_kategori_pemasukan 
+          AND `bukti_pemasukan` = p_bukti_pemasukan 
+          AND `id_bank` = p_id_bank
+    ) THEN
+        -- Insert the new record if it does not exist
+        INSERT INTO `pemasukan` (
+            `tanggal_pemasukan`,
+            `total_pemasukan`,
+            `bentuk_pemasukan`,
+            `id_kategori_pemasukan`,
+            `bukti_pemasukan`,
+            `id_bank`
+        ) VALUES (
+            p_tanggal_pemasukan,
+            p_total_pemasukan,
+            p_bentuk_pemasukan,
+            p_id_kategori_pemasukan,
+            p_bukti_pemasukan,
+            p_id_bank
+        );
+    END IF;
 END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_pemasukan` (IN `p_id_pemasukan` INT, IN `p_tanggal_pemasukan` DATE, IN `p_total_pemasukan` INT, IN `p_bentuk_pemasukan` VARCHAR(225), IN `p_id_kategori_pemasukan` INT, IN `p_bukti_pemasukan` VARCHAR(500), IN `p_id_bank` INT)   BEGIN
     UPDATE pemasukan
     SET

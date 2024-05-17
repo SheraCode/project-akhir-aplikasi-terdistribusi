@@ -43,10 +43,42 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetWaktuKegiatanHome` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `tambah_data_kegiatan` (IN `jenis_kegiatan_id` INT, IN `gereja_id` INT, IN `kegiatan_nama` VARCHAR(225), IN `kegiatan_lokasi` VARCHAR(225), IN `kegiatan_foto` VARCHAR(400), IN `keterangan` TEXT)   BEGIN
-    INSERT INTO waktu_kegiatan (id_jenis_kegiatan, id_gereja, nama_kegiatan, lokasi_kegiatan, foto_kegiatan, keterangan)
-    VALUES (jenis_kegiatan_id, gereja_id, kegiatan_nama, kegiatan_lokasi, kegiatan_foto, keterangan);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `tambah_data_kegiatan` (
+    IN `jenis_kegiatan_id` INT, 
+    IN `gereja_id` INT, 
+    IN `kegiatan_nama` VARCHAR(225), 
+    IN `kegiatan_lokasi` VARCHAR(225), 
+    IN `kegiatan_foto` VARCHAR(400), 
+    IN `keterangan` TEXT
+)
+BEGIN
+    -- Check if the record already exists
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM waktu_kegiatan 
+        WHERE id_jenis_kegiatan = jenis_kegiatan_id 
+          AND id_gereja = gereja_id 
+          AND nama_kegiatan = kegiatan_nama
+    ) THEN
+        -- Insert the new record if it does not exist
+        INSERT INTO waktu_kegiatan (
+            id_jenis_kegiatan, 
+            id_gereja, 
+            nama_kegiatan, 
+            lokasi_kegiatan, 
+            foto_kegiatan, 
+            keterangan
+        ) VALUES (
+            jenis_kegiatan_id, 
+            gereja_id, 
+            kegiatan_nama, 
+            kegiatan_lokasi, 
+            kegiatan_foto, 
+            keterangan
+        );
+    END IF;
 END$$
+
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ubah_data_kegiatan` (IN `id_kegiatan` INT, IN `jenis_kegiatan_id` INT, IN `gereja_id` INT, IN `kegiatan_nama` VARCHAR(225), IN `kegiatan_foto` VARCHAR(400), IN `keterangan` TEXT)   BEGIN
     UPDATE waktu_kegiatan 

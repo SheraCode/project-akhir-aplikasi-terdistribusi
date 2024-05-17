@@ -35,10 +35,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CreatePelayananIbadahData` (`p_nama
     VALUES (p_nama_pelayanan_ibadah, p_keterangan);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CreatePelayanIbadahData` (`p_id_jadwal_ibadah` INT, `p_id_pelayanan_ibadah` INT, `p_keterangan` VARCHAR(255))   BEGIN
-    INSERT INTO pelayan_ibadah (id_jadwal_ibadah, id_pelayanan_ibadah, keterangan)
-    VALUES (p_id_jadwal_ibadah, p_id_pelayanan_ibadah, p_keterangan);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CreatePelayanIbadahData` (
+    IN `p_id_jadwal_ibadah` INT, 
+    IN `p_id_pelayanan_ibadah` INT, 
+    IN `p_keterangan` VARCHAR(255)
+)
+BEGIN
+    -- Check if the record already exists
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM pelayan_ibadah 
+        WHERE id_jadwal_ibadah = p_id_jadwal_ibadah 
+          AND id_pelayanan_ibadah = p_id_pelayanan_ibadah
+    ) THEN
+        -- Insert the new record if it does not exist
+        INSERT INTO pelayan_ibadah (
+            id_jadwal_ibadah, 
+            id_pelayanan_ibadah, 
+            keterangan
+        ) VALUES (
+            p_id_jadwal_ibadah, 
+            p_id_pelayanan_ibadah, 
+            p_keterangan
+        );
+    END IF;
 END$$
+
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `EditJadwalIbadah` (IN `p_id_jadwal_ibadah` INT, IN `p_id_jenis_minggu` INT, IN `p_tgl_ibadah` VARCHAR(225), IN `p_sesi_ibadah` VARCHAR(225), IN `p_keterangan` TEXT)   BEGIN
     UPDATE jadwal_ibadah
